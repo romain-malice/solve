@@ -137,14 +137,16 @@ void exprPrint(Expr *expression) {
         printf("%c", expression->value.symbol);
         break;
     case OP:
+        printf("(");
         exprPrint(expression->left);
         switch (expression->value.operation) {
-        case PLUS: printf("+"); break;
-        case MINUS: printf("-"); break;
-        case TIMES: printf("*"); break;
-        case DIV: printf("/"); break;
+        case PLUS: printf(" + "); break;
+        case MINUS: printf(" - "); break;
+        case TIMES: printf(" * "); break;
+        case DIV: printf(" / "); break;
         }
         exprPrint(expression->right);
+        printf(")");
         break;
     }
 }
