@@ -1,1 +1,1 @@
-Solver, a symbolic solver that does the job.
+Solve, a symbolic solver that does the job.

@@ -120,14 +120,6 @@ void exprSolve(Expr *expression) {
     }
 }
 
-int getNum(Expr *expression) {
-    return expression->value.num;
-}
-
-char getSymbol(Expr *expression) {
-    return expression->value.symbol;
-}
-
 void exprPrint(Expr *expression) {
     switch (expression->type) {
         case NUM:
@@ -149,4 +141,28 @@ void exprPrint(Expr *expression) {
             printf(")");
             break;
     }
+}
+
+bool exprIsOp(Expr *expression) {
+    return expression->type == OP;
+}
+
+bool exprIsVar(Expr *expression) {
+    return expression->type == VAR;
+}
+
+bool exprIsNum(Expr *expression) {
+    return expression->type == NUM;
+}
+
+Operator exprGetOp(Expr *expression) {
+    return expression->value.operation;
+}
+
+int exprGetNum(Expr *expression) {
+    return expression->value.num;
+}
+
+char exprGetSymbol(Expr *expression) {
+    return expression->value.symbol;
 }
