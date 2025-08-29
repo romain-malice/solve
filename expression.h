@@ -11,8 +11,8 @@ typedef enum {
 
 Expr *exprOp(Operator, Expr *, Expr *);
 
-Expr *exprNum(double);
-double getNum(Expr *);
+Expr *exprNum(int);
+int getNum(Expr *);
 
 Expr *exprVar(char);
 char getSymbol(Expr *);

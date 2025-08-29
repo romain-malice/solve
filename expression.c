@@ -12,7 +12,7 @@ struct Expr_t {
     ExprType type;
     union {
         Operator operation;
-        double num;
+        int num;
         char symbol;
     } value;
     Expr *left;
@@ -46,7 +46,7 @@ Expr *exprOp(Operator op, Expr *left, Expr *right) {
  *
  * @return A pointer to the expression
  */
-Expr *exprNum(double number) {
+Expr *exprNum(int number) {
     Expr *newExpr = malloc(sizeof(Expr));
 
     newExpr->type = NUM;
@@ -98,29 +98,29 @@ void exprSolve(Expr *expression) {
         // Solve the node if possible
         if (expression->left->type == NUM && expression->right->type == NUM) {
 
-            double leftNum = expression->left->value.num;
-            double rightNum = expression->right->value.num;
+            int leftNum = expression->left->value.num;
+            int rightNum = expression->right->value.num;
 
-            expression->type = NUM;
             switch (expression->value.operation) {
                 case PLUS:
                     expression->value.num = leftNum + rightNum;
+                    expression->type = NUM;
                     break;
                 case MINUS:
                     expression->value.num = leftNum - rightNum;
+                    expression->type = NUM;
                     break;
                 case TIMES:
                     expression->value.num = leftNum * rightNum;
+                    expression->type = NUM;
                     break;
-                case DIV:
-                    expression->value.num = leftNum / rightNum;
-                    break;
+                case DIV: break;
             }
         }
     }
 }
 
-double getNum(Expr *expression) {
+int getNum(Expr *expression) {
     return expression->value.num;
 }
 
@@ -130,23 +130,23 @@ char getSymbol(Expr *expression) {
 
 void exprPrint(Expr *expression) {
     switch (expression->type) {
-    case NUM:
-        printf("%f", expression->value.num);
-        break;
-    case VAR:
-        printf("%c", expression->value.symbol);
-        break;
-    case OP:
-        printf("(");
-        exprPrint(expression->left);
-        switch (expression->value.operation) {
-        case PLUS: printf(" + "); break;
-        case MINUS: printf(" - "); break;
-        case TIMES: printf(" * "); break;
-        case DIV: printf(" / "); break;
-        }
-        exprPrint(expression->right);
-        printf(")");
-        break;
+        case NUM:
+            printf("%d", expression->value.num);
+            break;
+        case VAR:
+            printf("%c", expression->value.symbol);
+            break;
+        case OP:
+            printf("(");
+            exprPrint(expression->left);
+            switch (expression->value.operation) {
+                case PLUS: printf(" + "); break;
+                case MINUS: printf(" - "); break;
+                case TIMES: printf(" * "); break;
+                case DIV: printf(" / "); break;
+            }
+            exprPrint(expression->right);
+            printf(")");
+            break;
     }
 }
