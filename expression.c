@@ -1,13 +1,18 @@
 #include "expression.h"
 #include <stdlib.h>
 
-typedef enum { OP, NUM } ExprType;
+typedef enum {
+    OP,
+    NUM,
+    VAR
+} ExprType;
 
 struct Expr_t {
     ExprType type;
     union {
         Operator operation;
         double num;
+        char symbol;
     } value;
     Expr *left;
     Expr *right;
@@ -51,6 +56,17 @@ Expr *exprNum(double number) {
     return newExpr;
 }
 
+Expr *exprVar(char symbol) {
+    Expr *newExpr = malloc(sizeof(Expr));
+
+    newExpr->type = VAR;
+    newExpr->value.symbol = symbol;
+    newExpr->left = NULL;
+    newExpr->right = NULL;
+
+    return newExpr;
+}
+
 /*
  * @brief Frees an expression of any type (including its children if they exist)
  *
@@ -66,56 +82,47 @@ void exprFree(Expr *expression) {
 }
 
 /*
- * @brief Turns an expression into a number expression.
+ * @brief Tries to solve an expression. Does nothing if not solvable.
  *
  * @param expression The expression to solve
  */
 void exprSolve(Expr *expression) {
-    if (expression->type == OP) {
-
-        // 1. Get the left and right numbers
-        double leftNum, rightNum;
-
-        if (expression->left->type == NUM) {
-            leftNum = expression->left->value.num;
-        } else {
+    if (expression->type == OP) { // => has 2 children, no need to check
+        // Solve children if possible
+        if (expression->left->type == OP)
             exprSolve(expression->left);
-            leftNum = expression->left->value.num;
-            exprFree(expression->left);
-        }
-
-        if (expression->right->type == NUM) {
-            rightNum = expression->right->value.num;
-        } else {
+        if (expression->right->type == OP)
             exprSolve(expression->right);
-            rightNum = expression->right->value.num;
-            exprFree(expression->right);
-        }
 
-        // 2. Compute the result
-        double result;
-        switch (expression->value.operation) {
-        case PLUS:
-            result = leftNum + rightNum;
-            break;
-        case MINUS:
-            result = leftNum - rightNum;
-            break;
-        case DIV:
-            result = leftNum / rightNum;
-            break;
-        case TIMES:
-            result = leftNum * rightNum;
-            break;
-        }
+        // Solve the node if possible
+        if (expression->left->type == NUM && expression->right->type == NUM) {
 
-        // 3. Update the expr
-        expression->type = NUM;
-        expression->value.num = result;
-        expression->left = NULL;
-        expression->right = NULL;
+            double leftNum = expression->left->value.num;
+            double rightNum = expression->right->value.num;
+
+            expression->type = NUM;
+            switch (expression->value.operation) {
+                case PLUS:
+                    expression->value.num = leftNum + rightNum;
+                    break;
+                case MINUS:
+                    expression->value.num = leftNum - rightNum;
+                    break;
+                case TIMES:
+                    expression->value.num = leftNum * rightNum;
+                    break;
+                case DIV:
+                    expression->value.num = leftNum / rightNum;
+                    break;
+            }
+        }
     }
-    return;
 }
 
-double getNum(Expr *expression) { return expression->value.num; }
+double getNum(Expr *expression) {
+    return expression->value.num;
+}
+
+char getSymbol(Expr *expression) {
+    return expression->value.symbol;
+}

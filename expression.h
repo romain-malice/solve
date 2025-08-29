@@ -14,6 +14,9 @@ Expr *exprOp(Operator, Expr *, Expr *);
 Expr *exprNum(double);
 double getNum(Expr *);
 
+Expr *exprVar(char);
+char getSymbol(Expr *);
+
 void exprFree(Expr *);
 
 void exprSolve(Expr *);
