@@ -21,4 +21,6 @@ void exprFree(Expr *);
 
 void exprSolve(Expr *);
 
+void exprPrint(Expr *);
+
 #endif
