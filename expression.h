@@ -9,7 +9,6 @@ typedef enum {
     MINUS,
     DIV,
     TIMES,
-    EXP
 } Operator;
 
 Expr *exprOp(Operator, Expr *, Expr *);
@@ -17,12 +16,12 @@ Operator exprGetOp(Expr *);
 bool exprIsOp(Expr *);
 
 Expr *exprNum(int);
+int exprGetNum(Expr *);
 bool exprIsNum(Expr *);
-int getNum(Expr *);
 
 Expr *exprVar(char);
+char exprGetSymbol(Expr *);
 bool exprIsVar(Expr *);
-char getSymbol(Expr *);
 
 void exprFree(Expr *);
 
